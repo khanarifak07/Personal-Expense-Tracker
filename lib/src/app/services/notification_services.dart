@@ -10,7 +10,6 @@ class NotificationService {
           channelName: "channelName",
           channelDescription: "channelDescription",
           playSound: true,
-          criticalAlerts: true,
           importance: NotificationImportance.Max,
         )
       ],
@@ -25,15 +24,19 @@ class NotificationService {
     //create schedule notification
     AwesomeNotifications().createNotification(
       schedule: NotificationCalendar(
-        hour: 22,
+        hour: 02,
         millisecond: 0,
-        minute: 00,
+        minute: 09,
       ),
       content: NotificationContent(
-          id: 1,
-          channelKey: "channelKey",
-          title: "Hello",
-          body: "Manage Your Expense"),
+        id: 1,
+        channelKey: "channelKey",
+        title: "Hello",
+        body: "Manage Your Expense",
+        criticalAlert: true,
+        wakeUpScreen: true,
+        fullScreenIntent: true,
+      ),
     );
   }
 }

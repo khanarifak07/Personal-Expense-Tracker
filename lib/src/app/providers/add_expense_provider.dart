@@ -15,20 +15,22 @@ class AddExpenseProivder extends ChangeNotifier {
   //select date method
   DateTime selectedDate = DateTime.now();
 
+  //to edit the expense
   void initEdit(Expense expense) {
     amountCtrl.text = expense.amount.toString();
     selectedDate = expense.date;
     descriptionCtrl.text = expense.description;
   }
 
+  //to clear the controller while adding new expense
   void clearCtrl() {
     amountCtrl.clear();
     descriptionCtrl.clear();
     selectedDate = DateTime.now();
   }
 
-  //date format
-  DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+//Date format
+  DateFormat dateFormat = DateFormat.yMMMd();
   //Select date method
   Future<void> selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -41,6 +43,50 @@ class AddExpenseProivder extends ChangeNotifier {
       selectedDate = pickedDate;
       notifyListeners();
     }
+  }
+
+  //Filter based on date range
+  //start and end date object
+  DateTime? startDate;
+  DateTime? endDate;
+  //based on start and end data create filter method
+  List<Expense> getFilteredExpenses() {
+    if (startDate == null || endDate == null) {
+      // If start or end date is not selected, return all expenses
+      return expenseDB;
+    } else {
+      // Filter expenses based on selected date range
+      final filteredExpenses = expenseDB.where((expense) {
+        final isAfterStart = expense.date.isAtSameMomentAs(startDate!) ||
+            expense.date.isAfter(startDate!);
+        final isBeforeEnd = expense.date.isAtSameMomentAs(endDate!) ||
+            expense.date.isBefore(endDate!);
+        return isAfterStart && isBeforeEnd;
+      }).toList();
+
+      return filteredExpenses;
+    }
+  }
+
+  //date range picker method
+  Future<void> selectDateRange(BuildContext context) async {
+    final DateTimeRange? pickedRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(3000),
+    );
+    if (pickedRange != null) {
+      startDate = pickedRange.start;
+      endDate = pickedRange.end;
+      notifyListeners();
+    }
+  }
+
+  //clear filters
+  void clearFilters() {
+    startDate = null;
+    endDate = null;
+    notifyListeners();
   }
 
   //get total amount from expense

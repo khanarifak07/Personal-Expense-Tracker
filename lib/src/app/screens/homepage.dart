@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_exprense_tracker/src/app/models/expense_model.dart';
 import 'package:personal_exprense_tracker/src/app/providers/add_expense_provider.dart';
 import 'package:personal_exprense_tracker/src/app/providers/homepage_provider.dart';
 import 'package:personal_exprense_tracker/src/app/screens/add_expense.dart';
@@ -26,22 +25,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     expenseDB = await getExpenseFromSharePref();
     setState(() {});
   }
-
-  DateTime? _startDate;
-  DateTime? _endDate;
-
-  List<Expense> getFilteredExpenses() {
-    if (_startDate == null || _endDate == null) {
-      return expenseDB;
-    } else {
-      return expenseDB.where((expense) {
-        return expense.date.isAfter(_startDate!) &&
-            expense.date.isBefore(_endDate!);
-      }).toList();
-    }
-  }
-
-//
 
   @override
   Widget build(BuildContext context) {
@@ -111,14 +94,45 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 35.0, top: 16),
-            child: Text(
-              "All Expenses",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.only(left: 35.0, top: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "All Expenses",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 35.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await addExpensePro.selectDateRange(context);
+                    },
+                    child: const Text("Filter By Date"),
+                    /* child: Text(_startDate != null && _endDate != null
+                        ? 'Selected Date Range ${DateFormat.yMMMd().format(_startDate!)}- ${DateFormat.yMMMd().format(_endDate!)}'
+                        : "Select Date Range"), */
+                  ),
+                ),
+              ],
             ),
           ),
-          for (var expense in expenseDB)
+          const SizedBox(height: 16),
+          if (addExpensePro.startDate != null && addExpensePro.endDate != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                    '${DateFormat.yMMMd().format(addExpensePro.startDate!)} - ${DateFormat.yMMMd().format(addExpensePro.endDate!)}'),
+                TextButton(
+                    onPressed: () {
+                      addExpensePro.clearFilters();
+                    },
+                    child: const Text("Clear Filters"))
+              ],
+            ),
+          for (var expense in addExpensePro.getFilteredExpenses())
             ExpenseList(
               amount: expense.amount,
               description: expense.description,
