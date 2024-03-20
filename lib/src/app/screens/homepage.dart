@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_exprense_tracker/src/app/models/expense_model.dart';
 import 'package:personal_exprense_tracker/src/app/providers/add_expense_provider.dart';
 import 'package:personal_exprense_tracker/src/app/providers/homepage_provider.dart';
 import 'package:personal_exprense_tracker/src/app/screens/add_expense.dart';
@@ -24,6 +25,20 @@ class _HomePageState extends ConsumerState<HomePage> {
   void loadData() async {
     expenseDB = await getExpenseFromSharePref();
     setState(() {});
+  }
+
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  List<Expense> getFilteredExpenses() {
+    if (_startDate == null || _endDate == null) {
+      return expenseDB;
+    } else {
+      return expenseDB.where((expense) {
+        return expense.date.isAfter(_startDate!) &&
+            expense.date.isBefore(_endDate!);
+      }).toList();
+    }
   }
 
 //
@@ -111,6 +126,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               deleteExpense: (context) =>
                   homePagePro.deleteExpense(expenseDB.indexOf(expense)),
               ontap: () async {
+                addExpensePro.initEdit(expense);
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -128,6 +144,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         onPressed: () async {
+          addExpensePro.clearCtrl();
           await Navigator.push(context,
               MaterialPageRoute(builder: (context) => const AddExpense()));
 

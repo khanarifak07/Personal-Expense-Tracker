@@ -1,3 +1,6 @@
+import 'package:personal_exprense_tracker/src/app/models/expense_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 List<Expense> expenseDB = [];
 
 //saving expenses to sharepref

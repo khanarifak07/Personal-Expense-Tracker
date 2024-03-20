@@ -15,11 +15,11 @@ class AddExpense extends ConsumerStatefulWidget {
 }
 
 class _AddExpenseState extends ConsumerState<AddExpense> {
-  late TextEditingController amountCtrl =
-      TextEditingController(text: widget.expense?.amount.toString());
-  late TextEditingController descriptionCtrl =
-      TextEditingController(text: widget.expense?.description);
-  late DateTime _selectedDate = widget.expense?.date ?? DateTime.now();
+  // late TextEditingController amountCtrl =
+  //     TextEditingController(text: widget.expense?.amount.toString());
+  // late TextEditingController descriptionCtrl =
+  //     TextEditingController(text: widget.expense?.description);
+  // late DateTime _selectedDate = widget.expense?.date ?? DateTime.now();
   @override
   Widget build(BuildContext context) {
     final addExpensePro = ref.watch(addExpenseProvider);
@@ -50,7 +50,7 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
               ),
             ),
             KTextField(
-              controller: amountCtrl,
+              controller: addExpensePro.amountCtrl,
               textFontSize: 40,
               prefixImage: Image.asset(
                 'assets/dollar.png',
@@ -119,7 +119,7 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
                 ),
                 KTextField(
                   maxLines: 5,
-                  controller: descriptionCtrl,
+                  controller: addExpensePro.descriptionCtrl,
                   keyboardType: TextInputType.text,
                 )
               ],
@@ -136,30 +136,31 @@ class _AddExpenseState extends ConsumerState<AddExpense> {
                 ),
                 onPressed: () async {
                   if (widget.expense == null) {
-                    if (amountCtrl.text.isNotEmpty &&
-                        descriptionCtrl.text.isEmpty) {}
-                    //create expense instance
-                    Expense newExpense = Expense(
-                      amount: int.parse(amountCtrl.text),
-                      date: _selectedDate,
-                      description: descriptionCtrl.text,
-                    );
-                    //get the expense
-                   expenseDB = await getExpenseFromSharePref();
-                    //add to expense databse
-                    expenseDB.add(newExpense);
-                    //save to shared pref
-                    await saveExpenseToSharedPref(expenseDB);
-                    //clear the controllers
-                    amountCtrl.clear();
-                    _selectedDate = DateTime.now();
-                    descriptionCtrl.clear();
-                    Navigator.of(context).pop();
+                    if (addExpensePro.amountCtrl.text.isNotEmpty &&
+                        addExpensePro.descriptionCtrl.text.isNotEmpty) {
+                      //create expense instance
+                      Expense newExpense = Expense(
+                        amount: int.parse(addExpensePro.amountCtrl.text),
+                        date: addExpensePro.selectedDate,
+                        description: addExpensePro.descriptionCtrl.text,
+                      );
+                      //get the expense
+                      expenseDB = await getExpenseFromSharePref();
+                      //add to expense databse
+                      expenseDB.add(newExpense);
+                      //save to shared pref
+                      await saveExpenseToSharedPref(expenseDB);
+                      //clear the controllers
+                      addExpensePro.amountCtrl.clear();
+                      addExpensePro.selectedDate = DateTime.now();
+                      addExpensePro.descriptionCtrl.clear();
+                      Navigator.of(context).pop();
+                    }
                   } else {
                     expenseDB[widget.index!] = Expense(
-                      amount: int.parse(amountCtrl.text),
-                      date: _selectedDate,
-                      description: descriptionCtrl.text,
+                      amount: int.parse(addExpensePro.amountCtrl.text),
+                      date: addExpensePro.selectedDate,
+                      description: addExpensePro.descriptionCtrl.text,
                       //
                     );
                     await saveExpenseToSharedPref(expenseDB);

@@ -55,7 +55,7 @@ class ExpenseList extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        date ?? "",
+                        date!,
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.tertiary,
                             fontSize: 16),
