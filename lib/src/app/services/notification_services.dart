@@ -25,15 +25,15 @@ class NotificationService {
     //create schedule notification
     AwesomeNotifications().createNotification(
       schedule: NotificationCalendar(
-        hour: 19,
+        hour: 22,
         millisecond: 0,
-        minute: 50,
+        minute: 00,
       ),
       content: NotificationContent(
           id: 1,
           channelKey: "channelKey",
           title: "Hello",
-          body: "This is the body of notification"),
+          body: "Manage Your Expense"),
     );
   }
 }
