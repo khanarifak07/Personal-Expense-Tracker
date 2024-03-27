@@ -43,5 +43,5 @@ jobs:
       - name: Push Test Build
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "releaseBuilds/*"
+          artifacts: "build/app/outputs/apk/release/*"
           tag: v1.0.${{ github.run_number }}
