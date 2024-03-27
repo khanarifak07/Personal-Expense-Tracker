@@ -9,7 +9,6 @@ import 'package:personal_exprense_tracker/src/widgets/shared_pref.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
-
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
@@ -18,7 +17,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    loadData(); // Initial fetch
+    loadData(); // Initial fetch data
   }
 
   void loadData() async {
