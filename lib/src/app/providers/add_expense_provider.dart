@@ -12,10 +12,8 @@ class AddExpenseProivder extends ChangeNotifier {
 
   TextEditingController amountCtrl = TextEditingController();
   TextEditingController descriptionCtrl = TextEditingController();
-  //select date method
-  DateTime selectedDate = DateTime.now();
 
-  //to edit the expense
+  //to pass the model data while editing the expense
   void initEdit(Expense expense) {
     amountCtrl.text = expense.amount.toString();
     selectedDate = expense.date;
@@ -31,13 +29,16 @@ class AddExpenseProivder extends ChangeNotifier {
 
 //Date format
   DateFormat dateFormat = DateFormat.yMMMd();
+  //select date method
+  DateTime selectedDate = DateTime.now();
   //Select date method
   Future<void> selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        firstDate: DateTime(2024),
-        lastDate: DateTime(2030),
-        initialDate: DateTime.now());
+      context: context,
+      firstDate: DateTime(2024),
+      lastDate: DateTime(2030),
+      initialDate: selectedDate,
+    );
 
     if (pickedDate != null && pickedDate != selectedDate) {
       selectedDate = pickedDate;
@@ -49,6 +50,20 @@ class AddExpenseProivder extends ChangeNotifier {
   //start and end date object
   DateTime? startDate;
   DateTime? endDate;
+  //date range picker method
+  Future<void> selectDateRange(BuildContext context) async {
+    final DateTimeRange? pickedRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(3000),
+    );
+    if (pickedRange != null) {
+      startDate = pickedRange.start;
+      endDate = pickedRange.end;
+      notifyListeners();
+    }
+  }
+
   //based on start and end data create filter method
   List<Expense> getFilteredExpenses() {
     if (startDate == null || endDate == null) {
@@ -65,20 +80,6 @@ class AddExpenseProivder extends ChangeNotifier {
       }).toList();
 
       return filteredExpenses;
-    }
-  }
-
-  //date range picker method
-  Future<void> selectDateRange(BuildContext context) async {
-    final DateTimeRange? pickedRange = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(3000),
-    );
-    if (pickedRange != null) {
-      startDate = pickedRange.start;
-      endDate = pickedRange.end;
-      notifyListeners();
     }
   }
 
