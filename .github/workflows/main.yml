@@ -27,13 +27,13 @@ jobs:
       # - run: flutter build apk --release --split-per-abi
       # - run: flutter build apk --dart-define-from-file devEnv.json
       # - run: flutter build appbundle --dart-define-from-file devEnv.json
-      - run: mv build/app/outputs/apk/release/app-release.apk releaseBuilds/Personal-Expense-Tracker.apk
+      # - run: mv build/app/outputs/apk/release/app-release.apk releaseBuilds/Personal-Expense-Tracker.apk
       # - run: mv build/app/outputs/bundle/release/app-release.aab releaseBuilds/BAV_Dev.aab
       # - run: flutter clean
-      - run: flutter build apk --split-per-abi
+      # - run: flutter build apk --split-per-abi
       # - run: flutter build apk --dart-define-from-file prodEnv.json
       # - run: flutter build appbundle --dart-define-from-file prodEnv.json --build-name=2.0.0 --build-number=8
-      - run: mv build/app/outputs/apk/release/app-release.apk releaseBuilds/Personal-Expense-Tracker.apk
+      # - run: mv build/app/outputs/apk/release/app-release.apk releaseBuilds/Personal-Expense-Tracker.apk
       # - run: mv build/app/outputs/apk/release/app-release.apk releaseBuilds/BAV_Prod.apk
       # - run: mv build/app/outputs/bundle/release/app-release.aab releaseBuilds/BAV_Prod.aab
       - name: Push Test Build
